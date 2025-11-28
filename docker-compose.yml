@@ -15,12 +15,12 @@ services:
       - backend
 
   frontend:
-    image: albin66/mean-frontend:latest
+    image: albin666/mean-frontend:latest
     container_name: frontend
     restart: always
 
   backend:
-    image: albin66/mean-backend:latest
+    image: albin666/mean-backend:latest
     container_name: backend
     environment:
       - MONGO_URL=mongodb://mongo:27017/tutorials_db
