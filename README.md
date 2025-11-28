@@ -244,7 +244,13 @@ jobs:
 
 | Service | URL |
 |--------|------|
-| **Frontend Application** | http://51.20.55.48 |
+| **Frontend Application**  | http://51.20.55.48 |
+| **Docker Hub – Frontend** | https://hub.docker.com/r/albin666/mean-frontend|
+| **Docker Hub – Backend**  | https://hub.docker.com/r/albin666/mean-backend|
+
+
+
+
 ---
 
 # 📸 6. Required Screenshots  
