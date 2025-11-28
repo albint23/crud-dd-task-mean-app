@@ -255,19 +255,9 @@ jobs:
 
 
 
-# 📸 7. Required Screenshots  
+# 📸 6. Required Screenshots  
 
-![alt text](screenshots/Build-And-Push-Job.png)
-Build and push job
 
-![alt text](screenshots/deploy-to-ec2-job.png)
-deploy-to-ec2-job
-
-![alt text](screenshots/Containers_running_on_EC2.png)
-Containers running on EC2
-
-![alt text](screenshots/Docker_Hub_repo.png)
-Dockerhub Repo
 
 ![alt text](screenshots/frontend1.png)
 
@@ -282,9 +272,23 @@ Dockerhub Repo
 ![alt text](screenshots/frontend6.png)
 
 ![alt text](screenshots/frontend7.png)
+
+
+![alt text](screenshots/Build-And-Push-Job.png)
+Build and push job
+
+![alt text](screenshots/deploy-to-ec2-job.png)
+deploy-to-ec2-job
+
+![alt text](screenshots/Containers_running_on_EC2.png)
+Containers running on EC2
+
+![alt text](screenshots/Docker_Hub_repo.png)
+Dockerhub Repo
+
 ---
 
-# 🧠 8. Issues & Fixes
+# 🧠 7. Issues & Fixes
 
 - Fixed Docker permission issue using `sudo usermod -aG docker $USER`  
 - Angular build path adjusted to `dist/angular-15-crud`  
@@ -294,7 +298,7 @@ Dockerhub Repo
 
 ---
 
-# 🎯 9. Final Result
+# 🎯 8. Final Result
 
 The MEAN application is now:
 
