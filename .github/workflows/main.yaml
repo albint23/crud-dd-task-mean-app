@@ -57,33 +57,33 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            echo "🚧 Checking Docker installation..."
+            echo "Checking Docker installation..."
             if ! command -v docker &> /dev/null
             then
               curl -fsSL https://get.docker.com | sudo sh
               sudo usermod -aG docker ubuntu
             fi
 
-            echo "📁 Using /home/ubuntu/app as deployment directory..."
+            echo "Using /home/ubuntu/app as deployment directory..."
             mkdir -p /home/ubuntu/app
 
             cd /home/ubuntu/app
 
             if [ ! -d .git ]; then
-              echo "📥 Cloning repository..."
+              echo "Cloning repository..."
               git clone https://github.com/${{ secrets.REPO_OWNER }}/${{ secrets.REPO_NAME }}.git .
             else
-              echo "🔄 Pulling updates..."
+              echo "Pulling updates..."
               git pull origin main
             fi
 
-            echo "🐳 Pulling new images from Docker Hub..."
+            echo " Pulling new images from Docker Hub..."
             docker compose pull
 
-            echo "🛑 Stopping old containers..."
+            echo " Stopping old containers..."
             docker compose down
 
-            echo "🚀 Starting updated containers..."
+            echo " Starting updated containers..."
             docker compose up -d
 
-            echo "🎉 Deployment completed! "
+            echo "Deployment completed! "

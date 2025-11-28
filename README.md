@@ -68,34 +68,41 @@ CMD ["node", "server.js"]
 # 🧩 2. Docker Compose Setup
 
 ```yaml
-version: "3.9"
+version: "3.8"
 
 services:
-  mongo:
-    image: mongo:6
-    container_name: mongo
+  reverse-proxy:
+    image: nginx:alpine
+    container_name: reverse-proxy
+    restart: always
     ports:
-      - "27017:27017"
+      - "80:80"
     volumes:
-      - mongo_data:/data/db
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    image: albin666/mean-frontend:latest
+    container_name: frontend
+    restart: always
 
   backend:
     image: albin666/mean-backend:latest
     container_name: backend
     environment:
-      - MONGO_URL=mongodb://mongo:27017/dd_db
-    ports:
-      - "8080:8080"
+      - MONGO_URL=mongodb://mongo:27017/tutorials_db
+    restart: always
     depends_on:
       - mongo
 
-  frontend:
-    image: albin666/mean-frontend:latest
-    container_name: frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
 
 volumes:
   mongo_data:
@@ -105,7 +112,7 @@ volumes:
 
 # 🌐 3. Nginx Reverse Proxy
 
-**File:** `frontend/nginx.conf`
+**File:** `/nginx.conf`
 
 ```nginx
 server {
@@ -147,6 +154,10 @@ on:
     branches: ["main"]
 
 jobs:
+
+  # --------------------------
+  # 1) BUILD AND PUSH IMAGES
+  # --------------------------
   build-and-push:
     runs-on: ubuntu-latest
 
@@ -160,33 +171,71 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build & Push Backend
-        run: |
-          docker build -t albin666/mean-backend:latest backend
-          docker push albin666/mean-backend:latest
+      # Build & Push Backend
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mean-backend:latest
 
-      - name: Build & Push Frontend
-        run: |
-          docker build -t albin666/mean-frontend:latest frontend
-          docker push albin666/mean-frontend:latest
+      # Build & Push Frontend
+      - name: Build frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mean-frontend:latest
 
-  deploy:
-    runs-on: ubuntu-latest
+  # --------------------------
+  # 2) DEPLOY ON EC2
+  # --------------------------
+  deploy-to-ec2:
     needs: build-and-push
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Deploy on EC2 via SSH
+        uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
           script: |
-            cd ~/project
-            git pull
+            echo "Checking Docker installation..."
+            if ! command -v docker &> /dev/null
+            then
+              curl -fsSL https://get.docker.com | sudo sh
+              sudo usermod -aG docker ubuntu
+            fi
+
+            echo "Using /home/ubuntu/app as deployment directory..."
+            mkdir -p /home/ubuntu/app
+
+            cd /home/ubuntu/app
+
+            if [ ! -d .git ]; then
+              echo "Cloning repository..."
+              git clone https://github.com/${{ secrets.REPO_OWNER }}/${{ secrets.REPO_NAME }}.git .
+            else
+              echo "Pulling updates..."
+              git pull origin main
+            fi
+
+            echo " Pulling new images from Docker Hub..."
             docker compose pull
+
+            echo " Stopping old containers..."
             docker compose down
+
+            echo " Starting updated containers..."
             docker compose up -d
+
+            echo "Deployment completed! "
 ```
 
 ---
@@ -201,8 +250,16 @@ jobs:
 # 📸 6. Required Screenshots  
 (All stored in the `/screenshots` folder)
 
-|
-
+![alt text](screenshots/Build-And-Push-Job.png)
+![alt text](screenshots/deploy-to-ec2-job.png)
+![alt text](screenshots/Containers_running_on_EC2.png)
+![alt text](screenshots/Docker_Hub_repo.png)
+![alt text](screenshots/frontend1.png)
+![alt text](screenshots/frontend2.png)
+![alt text](screenshots/frontend3.png)
+![alt text](screenshots/frontend5.png)
+![alt text](screenshots/frontend6.png)
+![alt text](screenshots/frontend7.png)
 ---
 
 # 🧠 7. Issues & Fixes
