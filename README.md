@@ -25,7 +25,20 @@ Components included:
 
 ---
 
-# 🐳 1. Dockerfiles
+
+# 🌍 1. Application Access Details
+
+| Service | URL |
+|--------|------|
+| **Frontend Application**  | http://51.20.55.48 |
+| **Docker Hub – Frontend** | https://hub.docker.com/r/albin666/mean-frontend|
+| **Docker Hub – Backend**  | https://hub.docker.com/r/albin666/mean-backend|
+
+
+
+
+---
+# 🐳 2. Dockerfiles
 
 Below are the exact Dockerfiles used in this project.
 
@@ -65,7 +78,7 @@ CMD ["node", "server.js"]
 
 ---
 
-# 🧩 2. Docker Compose Setup
+# 🧩 3. Docker Compose Setup
 
 ```yaml
 version: "3.8"
@@ -110,7 +123,7 @@ volumes:
 
 ---
 
-# 🌐 3. Nginx Reverse Proxy
+# 🌐 4. Nginx Reverse Proxy
 
 **File:** `/nginx.conf`
 
@@ -142,7 +155,7 @@ docker exec -it frontend ps aux
 
 ---
 
-# 🤖 4. CI/CD – GitHub Actions
+# 🤖 5. CI/CD – GitHub Actions
 
 **File:** `.github/workflows/deploy.yml`
 
@@ -240,20 +253,9 @@ jobs:
 
 ---
 
-# 🌍 5. Application Access Details
-
-| Service | URL |
-|--------|------|
-| **Frontend Application**  | http://51.20.55.48 |
-| **Docker Hub – Frontend** | https://hub.docker.com/r/albin666/mean-frontend|
-| **Docker Hub – Backend**  | https://hub.docker.com/r/albin666/mean-backend|
 
 
-
-
----
-
-# 📸 6. Required Screenshots  
+# 📸 7. Required Screenshots  
 
 ![alt text](screenshots/Build-And-Push-Job.png)
 Build and push job
@@ -282,7 +284,7 @@ Dockerhub Repo
 ![alt text](screenshots/frontend7.png)
 ---
 
-# 🧠 7. Issues & Fixes
+# 🧠 8. Issues & Fixes
 
 - Fixed Docker permission issue using `sudo usermod -aG docker $USER`  
 - Angular build path adjusted to `dist/angular-15-crud`  
@@ -292,7 +294,7 @@ Dockerhub Repo
 
 ---
 
-# 🎯 8. Final Result
+# 🎯 9. Final Result
 
 The MEAN application is now:
 
