@@ -86,4 +86,4 @@ jobs:
             echo "🚀 Starting updated containers..."
             docker compose up -d
 
-            echo "🎉 Deployment complete!"
+            echo "🎉 Deployment completed! "
